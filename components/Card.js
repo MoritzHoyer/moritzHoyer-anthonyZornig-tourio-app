@@ -43,6 +43,8 @@ const ScreenReaderOnly = styled.span`
 `;
 
 export default function Card({ name, image, location, id }) {
+  console.log("Card:", name, image, location, id);
+
   return (
     <Article>
       <Figure>
