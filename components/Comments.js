@@ -2,24 +2,24 @@ import styled from "styled-components";
 import { FormContainer, Input, Label } from "./Form";
 import { StyledButton } from "./StyledButton.js";
 
+const Article = styled.article`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 5px solid black;
+  border-radius: 0.8rem;
+  padding: 0.5rem;
+  text-align: center;
+  p {
+    border-bottom: solid 1px black;
+    padding: 20px;
+  }
+`;
 export default function Comments({ locationName, comments }) {
-  const Article = styled.article`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: 5px solid black;
-    border-radius: 0.8rem;
-    padding: 0.5rem;
-    text-align: center;
-    p {
-      border-bottom: solid 1px black;
-      padding: 20px;
-    }
-  `;
-
   function handleSubmitComment(e) {
     e.preventDefault();
   }
+  console.log("comments", comments);
 
   return (
     <Article>
