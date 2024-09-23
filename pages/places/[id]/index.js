@@ -33,28 +33,68 @@ export default function DetailsPage() {
   const router = useRouter();
   const { isReady } = router;
   const { id } = router.query;
+
   const {
-    data: { place } = {},
+    data: place,
+
     isLoading,
     error,
+    mutate,
   } = useSWR(`/api/places/${id}`);
 
+  console.log("Place ID from query:", id);
+  console.log("Place data from API:", place);
+
   if (!isReady || isLoading || error) return <h2>Loading...</h2>;
+  if (error || !place) return <h2>Place not found or an error occurred.</h2>;
 
   async function deletePlace() {
-    try {
-      const response = await fetch(`/api/places/${id}`, {
-        method: "DELETE",
-      });
+    const response = await fetch(`/api/places/${id}`, { method: "DELETE" });
+    if (response.ok) {
+      await response.json();
+      router.push("/");
+    } else {
+      console.error(`Error: ${response.status}`);
+    }
+  }
 
-      if (response.ok) {
-        console.log("Place successfully deleted!");
-        router.push("/");
-      } else {
-        console.error("Failed to delete place");
-      }
-    } catch (error) {
-      console.error("Error deleting place", error);
+  console.log("place", place);
+
+  async function handleSubmitComment(event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const commentData = Object.fromEntries(formData);
+
+    const response = await fetch(`/api/places/${id}/comments`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(commentData),
+    });
+
+    if (response.ok) {
+      mutate();
+      event.target.reset();
+    } else {
+      console.error("Failed to submit comment");
+    }
+  }
+
+  async function deleteComment(commentID) {
+    const response = await fetch(`/api/places/${id}/comments`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(commentID),
+    });
+    if (response.ok) {
+      await response.json();
+      mutate();
+    } else {
+      console.error(`Error: ${response.status}`);
     }
   }
 
@@ -65,7 +105,7 @@ export default function DetailsPage() {
       </Link>
       <ImageContainer>
         <StyledImage
-          src={place?.image}
+          src={place.image}
           priority
           fill
           sizes="(max-width: 768px) 100vw,
@@ -75,12 +115,12 @@ export default function DetailsPage() {
         />
       </ImageContainer>
       <h2>
-        {place?.name}, {place?.location}
+        {place.name}, {place.location}
       </h2>
-      <Link href={place?.mapURL} passHref legacyBehavior>
+      <Link href={place.mapURL} passHref legacyBehavior>
         <StyledLocationLink>Location on Google Maps</StyledLocationLink>
       </Link>
-      <p>{place?.description}</p>
+      <p>{place.description}</p>
       <ButtonContainer>
         <Link href={`/places/${id}/edit`} passHref legacyBehavior>
           <StyledLink>Edit</StyledLink>
@@ -89,7 +129,12 @@ export default function DetailsPage() {
           Delete
         </StyledButton>
       </ButtonContainer>
-      {/* <Comments locationName={place?.name} comments={comments} /> */}
+      <Comments
+        locationName={place.name}
+        comments={place.comments}
+        onSubmit={handleSubmitComment}
+        onDelete={deleteComment}
+      />
     </>
   );
 }
