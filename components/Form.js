@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { StyledButton } from "./StyledButton.js";
+import styled from 'styled-components';
+import { StyledButton } from './StyledButton.js';
 
 export const FormContainer = styled.form`
   display: grid;
@@ -25,6 +25,8 @@ export const Label = styled.label`
 `;
 
 export default function Form({ onSubmit, formName, defaultData }) {
+  console.log('defaultData ', defaultData);
+
   function handleSubmit(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
@@ -71,7 +73,7 @@ export default function Form({ onSubmit, formName, defaultData }) {
         defaultValue={defaultData?.description}
       ></Textarea>
       <StyledButton type="submit">
-        {defaultData ? "Update place" : "Add place"}
+        {defaultData ? 'Update place' : 'Add place'}
       </StyledButton>
     </FormContainer>
   );
