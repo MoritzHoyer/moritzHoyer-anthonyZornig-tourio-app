@@ -1,6 +1,6 @@
-import Link from "next/link.js";
-import styled from "styled-components";
-import { StyledImage } from "./StyledImage.js";
+import Link from 'next/link.js';
+import styled from 'styled-components';
+import { StyledImage } from './StyledImage.js';
 
 const Article = styled.article`
   border: 5px solid black;
@@ -20,7 +20,7 @@ const Figure = styled.figure`
 
 const Anchor = styled.a`
   &::after {
-    content: "";
+    content: '';
     display: block;
     position: absolute;
     top: 0;
@@ -43,8 +43,6 @@ const ScreenReaderOnly = styled.span`
 `;
 
 export default function Card({ name, image, location, id }) {
-  console.log("Card:", name, image, location, id);
-
   return (
     <Article>
       <Figure>
